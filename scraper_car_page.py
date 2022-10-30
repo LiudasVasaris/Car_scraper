@@ -1,4 +1,6 @@
+import json
 import re
+from decimal import Decimal
 from typing import Dict, Tuple, Optional
 
 import requests
@@ -70,7 +72,11 @@ class Car:
             None if not kwargs.get("Mišrus") else float(kwargs.get("Mišrus"))
         )
 
-        self.link = link
+        self.url = link
+
+    def get_json(self):
+        """Creates Json output of all information"""
+        return json.loads(json.dumps(self.__dict__), parse_float=Decimal)
 
     def __repr__(self):
         return f"{self.brand} {self.model}, {self.year}, {self.price} eur."

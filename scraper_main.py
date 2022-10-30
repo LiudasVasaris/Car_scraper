@@ -1,5 +1,7 @@
 from typing import List, Dict
 
+import boto3
+
 from scraper_car_page import Car
 from scraper_search_page import get_info_from_search_page
 
@@ -33,8 +35,22 @@ def scrape_pages(
 
     return cars_from_pages
 
-if __name__ == '__main__':
 
-    x = scrape_pages(
+def write_to_db(cars_from_pages: List[Car]):
+    """Writes scraped car info to DynamoDB
+    Args:
+        cars_from_pages (): List of cars to write to db
+    """
+    client_dynamo = boto3.resource("dynamodb")
+    table = client_dynamo.Table("car_table")
+    with table.batch_writer() as batch:
+        for car in cars_from_pages:
+            batch.put_item(Item=car.get_json())
+
+
+if __name__ == "__main__":
+
+    scraped_cars = scrape_pages(
         pages_to_scrape=2, initial_link=SEARCH_PAGE, main_page=MAIN_PAGE, header=HEADER
     )
+    write_to_db(scraped_cars)
