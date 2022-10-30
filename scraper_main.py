@@ -2,6 +2,7 @@ from typing import List, Dict
 
 import boto3
 
+from logger import LOGGER
 from scraper_car_page import Car
 from scraper_search_page import get_info_from_search_page
 
@@ -24,6 +25,7 @@ def scrape_pages(
 
     Returns: List of cars from pages
     """
+    LOGGER.info("Start Scraping pages")
     cars_from_pages = list()
     for i in range(1, pages_to_scrape + 1):
         cars, last_page = get_info_from_search_page(
@@ -32,7 +34,7 @@ def scrape_pages(
         cars_from_pages += cars
         if i >= last_page:
             break
-
+    LOGGER.info("Finished Scraping pages")
     return cars_from_pages
 
 
@@ -41,16 +43,28 @@ def write_to_db(cars_from_pages: List[Car]):
     Args:
         cars_from_pages (): List of cars to write to db
     """
+    LOGGER.info("Start writing to DynamoDB")
     client_dynamo = boto3.resource("dynamodb")
     table = client_dynamo.Table("car_table")
     with table.batch_writer() as batch:
         for car in cars_from_pages:
             batch.put_item(Item=car.get_json())
+    LOGGER.info("Finished writing to DynamoDB")
+
+
+def run_scraper(pages: int = 5):
+    """Main function for running full scraper"""
+    LOGGER.info(f"Start running scraper, pages={pages}")
+    scraped_cars = scrape_pages(
+        pages_to_scrape=pages,
+        initial_link=SEARCH_PAGE,
+        main_page=MAIN_PAGE,
+        header=HEADER,
+    )
+    write_to_db(scraped_cars)
+    LOGGER.info(f"Finished running scraper")
 
 
 if __name__ == "__main__":
 
-    scraped_cars = scrape_pages(
-        pages_to_scrape=2, initial_link=SEARCH_PAGE, main_page=MAIN_PAGE, header=HEADER
-    )
-    write_to_db(scraped_cars)
+    run_scraper()
