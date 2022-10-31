@@ -17,11 +17,11 @@ def extract_engine_and_kw(s: str) -> Tuple[Optional[float], Optional[int]]:
     """
     try:
         liters = float(re.findall(r"[\d.]+", (re.findall(r"\d+.*l", s)[0]))[0])
-    except IndexError:
+    except (IndexError, TypeError):
         liters = None
     try:
         kw = int(re.findall(r"\d+", (re.findall(r"\d+ kW", s)[0]))[0])
-    except IndexError:
+    except (IndexError, TypeError):
         kw = None
     return liters, kw
 
@@ -104,4 +104,9 @@ def get_car_details(link: str, header: Dict[str, str]) -> Car:
         for param in params
     }
 
-    return Car(link=link, **car_details)
+    try:
+        car = Car(link=link, **car_details)
+    except Exception as e:
+        raise ValueError(f"{link}, {e}")
+
+    return car
