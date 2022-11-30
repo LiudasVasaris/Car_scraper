@@ -34,7 +34,7 @@ def scrape_pages(
         cars_from_pages += cars
         if i >= last_page:
             break
-    LOGGER.info("Finished Scraping pages")
+    LOGGER.info(f"Finished Scraping pages, cars from pages: {len(cars_from_pages)}")
     return cars_from_pages
 
 
@@ -67,4 +67,4 @@ def run_scraper(pages: int = 5):
 
 if __name__ == "__main__":
 
-    run_scraper()
+    run_scraper(pages=300)
