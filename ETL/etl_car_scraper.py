@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.linear_model import LinearRegression
 
-from logger import LOGGER
+from Scraper.logger import LOGGER
 
 BUCKET = "car-scraper-vu-bucket"
 FOLDER = "output_files"

@@ -1,5 +1,5 @@
-from logger import LOGGER
-from scraper_main import run_scraper
+from Scraper.logger import LOGGER
+from Scraper.scraper_main import run_scraper
 
 
 def lambda_handler(event, context):
