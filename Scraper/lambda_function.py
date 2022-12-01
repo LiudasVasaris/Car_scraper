@@ -1,9 +1,9 @@
 from Scraper.logger import LOGGER
 from Scraper.scraper_main import run_scraper
 
-
 def lambda_handler(event, context):
     LOGGER.info(f"Executing lambda function, event: {event}")
-    run_scraper(pages=2)
+    pages_to_scrape = event.get("pages") or 2
+    run_scraper(pages=pages_to_scrape)
 
     return {"message": "Scraper finished"}
