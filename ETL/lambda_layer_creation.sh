@@ -1,6 +1,7 @@
 bucket_name="s3://car-scraper-vu-bucket/"
-package_name="car-scraper-package-etl.zip"
+package_name="car-scraper-etl-pandas-sklearn.zip"
 
+rm -rf packages || true
 mkdir packages
 cd packages || exit
 
@@ -10,7 +11,7 @@ source venv/bin/activate
 mkdir python
 cd python || exit
 
-pip install bs4 requests -t .
+pip install plotly -t .
 
 rm -rf ./*dist-info
 
