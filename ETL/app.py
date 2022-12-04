@@ -1,5 +1,5 @@
-from ETL.etl_car_scraper import run_etl
-from ETL.logger import LOGGER
+from etl_car_scraper import run_etl
+from logger import LOGGER
 
 
 def lambda_handler(event, context):

@@ -2,9 +2,9 @@ from typing import List, Dict
 
 import boto3
 
-from Scraper.logger import LOGGER
-from Scraper.scraper_car_page import Car
-from Scraper.scraper_search_page import get_info_from_search_page
+from logger import LOGGER
+from scraper_car_page import Car
+from scraper_search_page import get_info_from_search_page
 
 HEADER = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
