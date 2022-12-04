@@ -242,14 +242,14 @@ def load_data(plotly_graph, dataframe_content):
     graph_file = "car_graph.json"
     df_file = "dataframe_html.html"
 
-    os.makedirs("tmp", exist_ok=True)
+    os.makedirs("/tmp", exist_ok=True)
 
     # Write to temp memory
-    plotly_graph.write_json(f"tmp/{graph_file}")
-    open(f"tmp/{df_file}", "w", encoding="utf-8").write(dataframe_content)
+    plotly_graph.write_json(f"/tmp/{graph_file}")
+    open(f"/tmp/{df_file}", "w", encoding="utf-8").write(dataframe_content)
 
-    s3.upload_file(f"./tmp/{graph_file}", BUCKET, f"{FOLDER}/{graph_file}")
-    s3.upload_file(f"./tmp/{df_file}", BUCKET, f"{FOLDER}/{df_file}")
+    s3.upload_file(f"/tmp/{graph_file}", BUCKET, f"{FOLDER}/{graph_file}")
+    s3.upload_file(f"/tmp/{df_file}", BUCKET, f"{FOLDER}/{df_file}")
 
 
 def run_etl():
