@@ -1,4 +1,5 @@
 import datetime
+import os
 from typing import Tuple, List, Iterable
 
 import boto3
@@ -180,7 +181,7 @@ def create_graph(final_df):
         name="x=y",
     )
 
-    fig = go.FigureWidget(fig.data, fig.layout)
+    fig = go.Figure(fig.data, fig.layout)
 
     return fig
 
@@ -236,17 +237,19 @@ def prepare_final_df(initial_df, output_df):
     return final_df.drop(columns="price").sort_values("price_dif", ascending=False)
 
 
-def load_data(plotly_graph, dataframe_html):
+def load_data(plotly_graph, dataframe_content):
     s3 = boto3.client("s3")
-    graph_json = "car_graph.json"
-    df_html = "dataframe_html.html"
+    graph_file = "car_graph.json"
+    df_file = "dataframe_html.html"
+
+    os.makedirs("tmp", exist_ok=True)
 
     # Write to temp memory
-    plotly_graph.write_json(graph_json)
-    open(df_html, "w", encoding="utf-8").write(dataframe_html)
+    plotly_graph.write_json(f"tmp/{graph_file}")
+    open(f"tmp/{df_file}", "w", encoding="utf-8").write(dataframe_content)
 
-    s3.upload_file(graph_json, BUCKET, f"{FOLDER}/{graph_json}")
-    s3.upload_file(df_html, BUCKET, f"{FOLDER}/{df_html}")
+    s3.upload_file(f"./tmp/{graph_file}", BUCKET, f"{FOLDER}/{graph_file}")
+    s3.upload_file(f"./tmp/{df_file}", BUCKET, f"{FOLDER}/{df_file}")
 
 
 def run_etl():
