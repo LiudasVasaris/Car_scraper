@@ -4,7 +4,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.responses import HTMLResponse
 
 from dash_app_graph import create_dash_app_graph
-from utilities import get_dataframe_data, get_landing_page
+from utilities import get_landing_page, get_dataframe_data
 
 app = FastAPI()
 

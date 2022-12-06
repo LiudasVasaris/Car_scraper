@@ -1,0 +1,1 @@
+"""Car scraper web app"""

@@ -26,6 +26,7 @@ def get_dataframe_data():
     """Gets dataframe data from s3 for flask"""
     return read_s3_file_to_memory(DATAFRAME_FILE)
 
+
 def get_landing_page():
     return """
     <!DOCTYPE html>
