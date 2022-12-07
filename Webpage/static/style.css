@@ -1,0 +1,99 @@
+/*--------------------------------------------------------------------- 
+File Name: style.css 
+---------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------- 
+import Fonts 
+---------------------------------------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css?family=Rajdhani:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+@import url('https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700,700i,800,800i&display=swap');
+
+/*--------------------------------------------------------------------- 
+basic 
+---------------------------------------------------------------------*/
+
+body {
+    color: #666666;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.80857;
+    font-weight: normal;
+    margin: 0;
+    background: -webkit-linear-gradient(0deg, #cc333375 , #00339963);
+}
+
+.container {
+    max-width: 1200px;
+    padding: 0 20px;
+    margin: auto;
+}
+header {
+    margin-bottom: 20px;
+    
+    padding: 32px 0;
+    position: relative;
+}
+header .title {
+    color: #2E2C7E;
+    z-index: 2;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    background: -webkit-linear-gradient(0deg, #CC3333 , #003399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+header .after-title {
+    margin: 0;
+    font-size: 16px;
+    color: #002F78;
+    font-weight: 600;
+}
+.first-section .boxes {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.first-section .boxes .box{
+    width: 100%;
+    margin-top: 40px;
+    padding: 30px;
+    text-align: center;
+    background-color: #002F78;
+    box-shadow: rgb(0 0 0) 0px 0px 10px;
+}
+.first-section .boxes .box .text{
+    color: #ffffff;
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    line-height: 1em;
+}
+.first-section .boxes .box a{
+    width: 32%;
+    cursor: pointer;
+    border-radius: 0;
+    background-color: #87BEE9;
+    color: #002F78;
+    display: inline-block;
+    height: 52px;
+    line-height: 3.8;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0 10px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+}
+.first-section .boxes .box a:hover {
+    background-color: #CC3333;
+}
