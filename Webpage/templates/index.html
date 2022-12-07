@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- style css -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<!-- body -->
+
+<body>
+  <header>
+      <div class="container">
+          <h1 class="title">Car price evaluator</h1>
+          <p class="after-title">This app reads data from autoplius.lt and evaluates car prices using a linear reggresion model</p>
+      </div>
+  </header>
+  <div class="first-section">
+       <div class="container">
+            <div class="boxes">
+                <div class="box">
+                    <p class="text">Table representation</p>
+                    <a href="/table">Visit</a>
+                </div>
+                <div class="box">
+                    <p class="text">Visual graph representation</p>
+                    <a href="/graph">Visit</a>
+                </div>
+            </div>
+       </div>
+  </div>
+
+</body>
+</html>
