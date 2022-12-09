@@ -1,5 +1,6 @@
 import datetime
 import os
+import requests
 from typing import Tuple, List, Iterable
 
 import boto3
@@ -8,6 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.linear_model import LinearRegression
 
+from get_requests import get_responses
 from logger import LOGGER
 
 BUCKET = "car-scraper-vu-bucket"
@@ -38,6 +40,32 @@ def extract_data() -> pd.DataFrame:
     data = pd.DataFrame(table_parts)
 
     return data
+
+
+def update_working_links(trained_df):
+    """Requests links and filters dataframe to give back updated working links"""
+    filtered_df = trained_df[trained_df["working_link"].fillna(True)]
+    urls = filtered_df["url"].reset_index(drop=True)
+    LOGGER.info(f"Getting {len(urls)} url status")
+    working_links = pd.Series(get_responses(urls), name="working_link")
+    return pd.concat([urls, working_links], axis=1)
+
+
+def update_dynamodb_table_working_links(updated_links_df):
+    """Updates dynamo db tables with not working links"""
+    client_dynamo = boto3.resource("dynamodb")
+    table = client_dynamo.Table("car_table")
+
+    LOGGER.info("Updating working links in DynamoDB")
+
+    for url in updated_links_df[~updated_links_df["working_link"]]["url"]:
+        table.update_item(
+            Key={"url": url},
+            UpdateExpression="SET working_link = :val1",
+            ExpressionAttributeValues={":val1": False},
+        )
+
+    LOGGER.info("Done updating DynamoDB")
 
 
 def one_hot_encode(df: pd.DataFrame, columns: list) -> pd.DataFrame:
@@ -237,6 +265,13 @@ def prepare_final_df(initial_df, output_df):
     return final_df.drop(columns="price").sort_values("price_dif", ascending=False)
 
 
+def filter_out_good_links(final_df: pd.DataFrame, updated_links_df: pd.DataFrame):
+    working_links = updated_links_df[updated_links_df["working_link"]]
+    return final_df.merge(
+        working_links, how="inner", on=["url"], suffixes=("", "_updated")
+    )
+
+
 def load_data(plotly_graph, dataframe_content):
     s3 = boto3.client("s3")
     graph_file = "car_graph.json"
@@ -264,8 +299,12 @@ def run_etl():
     output_df = scale_back_price(trained_df, scalar_dict)
     final_df = prepare_final_df(df, output_df)
 
-    graph = create_graph(final_df)
-    df_html = create_dataframe_html(final_df)
+    updated_links_df = update_working_links(final_df)
+    update_dynamodb_table_working_links(updated_links_df)
+
+    final_df_good_links = filter_out_good_links(final_df, updated_links_df)
+    graph = create_graph(final_df_good_links)
+    df_html = create_dataframe_html(final_df_good_links)
 
     LOGGER.info("Loading data")
     load_data(graph, df_html)
