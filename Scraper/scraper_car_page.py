@@ -73,6 +73,7 @@ class Car:
         )
 
         self.url = link
+        self.working_link = True
 
     def get_json(self):
         """Creates Json output of all information"""
