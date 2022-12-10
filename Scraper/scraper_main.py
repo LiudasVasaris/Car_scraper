@@ -2,7 +2,7 @@ from typing import List, Dict
 
 import boto3
 
-from logger import LOGGER
+from logger_scraper import LOGGER
 from scraper_car_page import Car
 from scraper_search_page import get_info_from_search_page
 

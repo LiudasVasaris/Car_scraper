@@ -1,4 +1,4 @@
-from logger import LOGGER
+from logger_scraper import LOGGER
 from scraper_main import run_scraper
 
 def lambda_handler(event, context):

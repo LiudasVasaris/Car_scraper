@@ -1,10 +1,16 @@
 import boto3
+import cachetools.func
+
+from logger_webpage import LOGGER
+
 
 BUCKET = "car-scraper-vu-bucket"
 DATAFRAME_FILE = "output_files/dataframe_html.html"
 GRAPH_FILE = "output_files/car_graph.json"
 
-# TODO cache function
+CACHE_TIME = 60 * 60
+
+
 def read_s3_file_to_memory(file_path):
     """Reads file to memory from s3
     Args:
@@ -17,13 +23,17 @@ def read_s3_file_to_memory(file_path):
     return bucket.Object(file_path).get()["Body"].read().decode("utf-8")
 
 
+@cachetools.func.ttl_cache(ttl=CACHE_TIME)
 def get_graph_data():
     """Gets graph data from s3 for dash app"""
+    LOGGER.info("Getting Graph data from s3")
     return read_s3_file_to_memory(GRAPH_FILE)
 
 
+@cachetools.func.ttl_cache(ttl=CACHE_TIME)
 def get_dataframe_data():
     """Gets dataframe data from s3 for flask"""
+    LOGGER.info("Getting Dataframe data from s3")
     return read_s3_file_to_memory(DATAFRAME_FILE)
 
 
