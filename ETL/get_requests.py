@@ -2,8 +2,6 @@ import asyncio
 
 import aiohttp
 
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
 
 async def fetch(s, url):
     async with s.get(url) as r:

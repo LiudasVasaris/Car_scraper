@@ -5,6 +5,7 @@ import flask
 import plotly
 from dash.dependencies import Input, Output
 
+from logger_webpage import LOGGER
 from utilities import get_graph_data
 
 
@@ -16,39 +17,41 @@ def create_dash_app_graph(requests_pathname_prefix: str) -> dash.Dash:
     Returns: Dash app
     """
     # Create Figure
-    graph_json = get_graph_data()
-    fig = plotly.io.from_json(graph_json)
-    fig.update_layout(yaxis_range=[0, 10000], xaxis_range=[0, 10000])
-    fig.update_layout(
-        dict(
-            updatemenus=[
-                dict(
-                    type="buttons",
-                    direction="left",
-                    buttons=list(
-                        [
-                            dict(
-                                args=["visible", "legendonly"],
-                                label="Deselect All",
-                                method="restyle",
-                            ),
-                            dict(
-                                args=["visible", True],
-                                label="Select All",
-                                method="restyle",
-                            ),
-                        ]
+    def create_figure():
+        graph_json = get_graph_data()
+        fig = plotly.io.from_json(graph_json)
+        fig.update_layout(yaxis_range=[0, 10000], xaxis_range=[0, 10000])
+        fig.update_layout(
+            dict(
+                updatemenus=[
+                    dict(
+                        type="buttons",
+                        direction="left",
+                        buttons=list(
+                            [
+                                dict(
+                                    args=["visible", "legendonly"],
+                                    label="Deselect All",
+                                    method="restyle",
+                                ),
+                                dict(
+                                    args=["visible", True],
+                                    label="Select All",
+                                    method="restyle",
+                                ),
+                            ]
+                        ),
+                        pad={"r": 10, "t": 10},
+                        showactive=False,
+                        x=1,
+                        xanchor="right",
+                        y=1.1,
+                        yanchor="top",
                     ),
-                    pad={"r": 10, "t": 10},
-                    showactive=False,
-                    x=1,
-                    xanchor="right",
-                    y=1.1,
-                    yanchor="top",
-                ),
-            ]
+                ]
+            )
         )
-    )
+        return fig
 
     # create server and app
     server = flask.Flask(__name__)
@@ -57,12 +60,20 @@ def create_dash_app_graph(requests_pathname_prefix: str) -> dash.Dash:
     )
     app.scripts.config.serve_locally = False
 
-    app.layout = dash.html.Div(
-        [
-            dash.dcc.Graph(id="fig", figure=fig),
-            dash.html.Div(id="debug"),
-        ]
-    )
+    def serve_layout():
+        """Allows for refresh each time page is opened"""
+        return dash.html.Div(
+            [
+                dash.dcc.Graph(
+                    id="fig",
+                    figure=create_figure(),
+                    style={"width": "90v", "height": "90vh"},
+                ),
+                dash.html.Div(id="debug"),
+            ]
+        )
+
+    app.layout = serve_layout
 
     @app.callback(
         Output("debug", "children"),
