@@ -30,4 +30,4 @@ app.mount("/graph", WSGIMiddleware(dash_app_graph.server))
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, port=80)
