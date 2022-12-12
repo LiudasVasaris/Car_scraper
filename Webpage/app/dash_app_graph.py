@@ -81,6 +81,7 @@ def create_dash_app_graph(requests_pathname_prefix: str) -> dash.Dash:
     )
     def point_clicked(clickdata):
         if clickdata:
-            webbrowser.open_new_tab(clickdata["points"][0]["customdata"][0])
+            url = clickdata["points"][0]["customdata"][0]
+            return f"Link to selected car page: {url}"
 
     return app
